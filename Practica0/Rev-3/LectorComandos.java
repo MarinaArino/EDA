@@ -32,7 +32,8 @@ public class LectorComandos {
 			Scanner scan = new Scanner(new File(FICH_ENTRADA));
 			PrintStream out = new PrintStream(FICH_SALIDA);
 			while (scan.hasNextLine()) {
-				if(scan.nextLine().equals(INTRO)){
+				String instruccion = scan.nextLine();
+				if(instruccion.equals(INTRO)){
 					String batalla = scan.nextLine();
 					String descripcion = scan.nextLine();
 					//La informacion de la batalla ya se encuentra en 
@@ -48,7 +49,7 @@ public class LectorComandos {
 						out.format("INSERCION: %s;%s%n", batalla, descripcion);
 					}
 				}
-				else if(scan.nextLine().equals(MODIFICAR)){
+				else if(instruccion.equals(MODIFICAR)){
 					String batalla = scan.nextLine();
 					int participantes = scan.nextInt();
 					//Creamos el objeto Integer para poder añadir luego al Par
@@ -79,7 +80,7 @@ public class LectorComandos {
 						out.format("MODIFICACION DESECHADA: %s;%d%n", batalla, participantes);
 					}
 				}
-				else if(scan.nextLine().equals(ELIMINAR)){
+				else if(instruccion.equals(ELIMINAR)){
 					String batalla = scan.nextLine();
 					if(Coleccion.esta(batalla)){
 						try{
@@ -96,7 +97,7 @@ public class LectorComandos {
 						out.format("ELIMINACION DESECHADA: %s%n", batalla);
 					}
 				}
-				else if(scan.nextLine().equals(BUSCAR)){
+				else if(instruccion.equals(BUSCAR)){
 					String batalla = scan.nextLine();
 					if(Coleccion.esta(batalla)){
 						try{
@@ -112,7 +113,7 @@ public class LectorComandos {
 						out.format("BUSQUEDA SIN EXITO: %s%n", batalla);
 					}
 				}
-				else if(scan.nextLine().equals(LISTAR)){
+				else if(instruccion.equals(LISTAR)){
 					out.format("TOTAL: %d%n", Coleccion.tamaño());
 					out.format("%s", Coleccion.listar());
 				}
