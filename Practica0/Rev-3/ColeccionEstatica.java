@@ -11,6 +11,7 @@ public class ColeccionEstatica<Id, In> implements Coleccion<Id, In> {
 	public ColeccionEstatica() {
 		this.total = 0;
 		this.Tabla = (Par[]) new Object[MAX];
+		iniciarIterador();
 	}
 
 	@Override
@@ -22,7 +23,7 @@ public class ColeccionEstatica<Id, In> implements Coleccion<Id, In> {
 		} else {
 			int indiceOtro = 0;
 			while (indiceOtro < total) {
-				if (Tabla[indiceOtro].equals(identificador)) {
+				if (Tabla[indiceOtro].getIden().equals(identificador)) {
 					Tabla[indiceOtro].modIn(informacion);
 				} else {
 					indiceOtro++;
@@ -37,7 +38,7 @@ public class ColeccionEstatica<Id, In> implements Coleccion<Id, In> {
 		int indiceOtro = 0;
 		boolean encontrado = false;
 		while (indiceOtro < total && !encontrado) {
-			if (Tabla[indiceOtro].equals(identificador)) {
+			if (Tabla[indiceOtro].getIden().equals(identificador)) {
 				encontrado = true;
 			} else {
 				indiceOtro++;
@@ -52,7 +53,7 @@ public class ColeccionEstatica<Id, In> implements Coleccion<Id, In> {
 		int indiceOtro = 0;
 		boolean encontrado = false;
 		while (indiceOtro < total && !encontrado) {
-			if (Tabla[indiceOtro].equals(identificador)) {
+			if (Tabla[indiceOtro].getIden().equals(identificador)) {
 				encontrado = true;
 			} else {
 				indiceOtro++;
@@ -73,14 +74,25 @@ public class ColeccionEstatica<Id, In> implements Coleccion<Id, In> {
 			int indiceOtro = 0;
 			boolean encontrado = false;
 			while (!encontrado) {
-				if (Tabla[indiceOtro].equals(identificador)) {
-					Tabla[indiceOtro] = null;
+				if (Tabla[indiceOtro].getIden().equals(identificador)) {
 					encontrado = true;
 				} else {
 					indiceOtro++;
 				}
 			}
+			actualizarTabla(indiceOtro);
 		}
+	}
+	/**
+	 * Llenamos el hueco del Par eliminado moviendo todos los elementos de
+	 * la tabla.
+	 */
+	private void actualizarTabla(int n){
+		for(int i = n; i < total - 1; i++){
+			Tabla[n] = Tabla[n + 1];
+		}
+		Tabla[total - 1] = null;
+		total--;
 	}
 
 	
