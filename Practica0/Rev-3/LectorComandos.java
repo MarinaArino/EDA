@@ -54,12 +54,15 @@ public class LectorComandos {
 				else if(scan.nextLine().equals(MODIFICAR)){
 					String batalla = scan.nextLine();
 					int participantes = scan.nextInt();
+					Integer parti = new Integer(participantes);
 					if(Coleccion.esta(batalla)){
 						Coleccion.iniciarIterador();
 						while(Coleccion.existeSiguiente()){
 							Par<String, Par<String, Integer>> elemento = Coleccion.siguiente();
 							if(elemento.getIden() == batalla){
-								//elemento.modIn(in);
+								Par <String, Integer> informacion = elemento.getInfor();
+								Par <String, Integer> nuevaInfor = new Par<String, Integer>(informacion.getIden(),
+										parti);
 							}
 						}
 					}
