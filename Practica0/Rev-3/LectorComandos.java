@@ -14,14 +14,12 @@ public class LectorComandos {
 	private static final String FICH_ENTRADA = "entrada.txt";
 	private static final String FICH_SALIDA = "salida.txt";
 	
-	private static int total;
 	private ColeccionEstatica <String, Par<String, Integer>> Coleccion = null;
 	
 	/**
 	 * Metodo constructor de la clase.
 	 */
 	public LectorComandos() {
-		total = 0;
 		Coleccion = new ColeccionEstatica<String, Par<String, Integer>>();
  	}
 		
@@ -47,7 +45,6 @@ public class LectorComandos {
 					else{
 						Par<String, Integer> informacion = new Par<String, Integer>(descripcion, 0);
 						Coleccion.meter(batalla, informacion);
-						total++;
 						out.format("INSERCION: %s;%s%n", batalla, descripcion);
 					}
 				}
@@ -59,23 +56,28 @@ public class LectorComandos {
 					if(Coleccion.esta(batalla)){
 						//Recorremos la coleccion en busca del objeto a modificar
 						Coleccion.iniciarIterador();
-						while(Coleccion.existeSiguiente()){
+						boolean encontrado = false;
+						while(Coleccion.existeSiguiente() && !encontrado){
 							Par<String, Par<String, Integer>> elemento = Coleccion.siguiente();
-							if(elemento.getIden() == batalla){
+							if(elemento.getIden().equals(batalla)){
 								//Recuperamos la informacion y unicamente cambiamos el numero de participantes
 								Par <String, Integer> informacion = elemento.getInfor();
 								Par <String, Integer> nuevaInfor = new Par<String, Integer>
 								(informacion.getIden(), parti);
 								//Actualizamos la informacion en la coleccion
+								elemento.modIn(nuevaInfor);
+								encontrado = true;
+							}
+							else{
+								Coleccion.siguiente();
 							}
 						}
+						//Escribimos en el fichero de salida.
+						out.format("MODIFICACION: %s;%d%n", batalla, participantes);
 					}
 					else{
-						
+						out.format("MODIFICACION DESECHADA: %s;%d%n", batalla, participantes);
 					}
-				}
-				else if(scan.nextLine().equals(ELIMINAR)){
-					
 				}
 				else if(scan.nextLine().equals(ELIMINAR)){
 					
