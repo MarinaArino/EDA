@@ -7,10 +7,10 @@ public class ColeccionEstatica<Id, In> implements Coleccion<Id, In> {
 	private int total;
 	private static int iterador;
 	
-	@SuppressWarnings("unchecked")
+	
 	public ColeccionEstatica() {
 		this.total = 0;
-		this.Tabla = (Par[]) new Object[MAX];
+		this.Tabla = (Par<Id, In>[]) new Par[MAX];
 		iniciarIterador();
 	}
 
