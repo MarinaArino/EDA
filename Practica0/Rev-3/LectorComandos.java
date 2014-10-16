@@ -54,17 +54,24 @@ public class LectorComandos {
 				else if(scan.nextLine().equals(MODIFICAR)){
 					String batalla = scan.nextLine();
 					int participantes = scan.nextInt();
+					//Creamos el objeto Integer para poder añadir luego al Par
 					Integer parti = new Integer(participantes);
 					if(Coleccion.esta(batalla)){
+						//Recorremos la coleccion en busca del objeto a modificar
 						Coleccion.iniciarIterador();
 						while(Coleccion.existeSiguiente()){
 							Par<String, Par<String, Integer>> elemento = Coleccion.siguiente();
 							if(elemento.getIden() == batalla){
+								//Recuperamos la informacion y unicamente cambiamos el numero de participantes
 								Par <String, Integer> informacion = elemento.getInfor();
-								Par <String, Integer> nuevaInfor = new Par<String, Integer>(informacion.getIden(),
-										parti);
+								Par <String, Integer> nuevaInfor = new Par<String, Integer>
+								(informacion.getIden(), parti);
+								//Actualizamos la informacion en la coleccion
 							}
 						}
+					}
+					else{
+						
 					}
 				}
 				else if(scan.nextLine().equals(ELIMINAR)){
