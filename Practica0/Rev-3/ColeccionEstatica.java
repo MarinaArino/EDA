@@ -1,137 +1,96 @@
 package practica0;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
+import java.util.Scanner;
 
-public class ColeccionEstatica<Id, In> implements Coleccion<Id, In> {
-	private static final int MAX = 100;
-
-	private Par<Id, In>[] Tabla;
-	private int total;
-	private int indice;
-	private static int iterador;
+public class LectorComandos {
+	private static final String INTRO = "i";
+	private static final String MODIFICAR = "m";
+	private static final String ELIMINAR = "e";
+	private static final String BUSCAR = "b";
+	private static final String LISTAR = "l";
 	
-	@SuppressWarnings("unchecked")
-	public ColeccionEstatica() {
-		this.total = 0;
-		this.indice = 0;
-		this.Tabla = (Par[]) new Object[MAX];
-	}
-
-	@Override
-	public void meter(Id identificador, In informacion) {
-		if (!esta(identificador)) {
-			Par<Id, In> nuevo = new Par<Id, In>(identificador, informacion);
-			Tabla[indice] = nuevo;
-			total++;
-			indice++;
-		} else {
-			int indiceOtro = 0;
-			while (indiceOtro < total) {
-				if (Tabla[indiceOtro].equals(identificador)) {
-					Tabla[indiceOtro].modIn(informacion);
-				} else {
-					indiceOtro++;
+	private static final String FICH_ENTRADA = "entrada.txt";
+	private static final String FICH_SALIDA = "salida.txt";
+	
+	private static int total;
+	private ColeccionEstatica <String, Par<String, Integer>> Coleccion = null;
+	
+	/**
+	 * Metodo constructor de la clase.
+	 */
+	public LectorComandos() {
+		total = 0;
+		Coleccion = new ColeccionEstatica<String, Par<String, Integer>>();
+ 	}
+		
+	/**
+	 * Lee el texto y realiza las operaciones descritas en el.
+	 * @throws NoHaySiguienteException 
+	 */
+	public void hacerOperaciones() throws NoHaySiguienteException {
+		try {
+			Scanner scan = new Scanner(new File(FICH_ENTRADA));
+			PrintStream out = new PrintStream(FICH_SALIDA);
+			while (scan.hasNextLine()) {
+				if(scan.nextLine().equals(INTRO)){
+					String batalla = scan.nextLine();
+					String descripcion = scan.nextLine();
+					//La informacion de la batalla ya se encuentra en 
+					//coleccion.
+					if(Coleccion.esta(batalla)){
+						out.format("INSERCION DESECHADA: %s;%s%n", batalla, descripcion);
+					}
+					//La informacion no se encuentra. La metemos y despues informamos
+					//en el fichero de salida.
+					else{
+						Par<String, Integer> informacion = new Par<String, Integer>(descripcion, 0);
+						Coleccion.meter(batalla, informacion);
+						total++;
+						out.format("INSERCION: %s;%s%n", batalla, descripcion);
+					}
+				}
+				else if(scan.nextLine().equals(MODIFICAR)){
+					String batalla = scan.nextLine();
+					int participantes = scan.nextInt();
+					Integer parti = new Integer(participantes);
+					if(Coleccion.esta(batalla)){
+						Coleccion.iniciarIterador();
+						while(Coleccion.existeSiguiente()){
+							Par<String, Par<String, Integer>> elemento = Coleccion.siguiente();
+							if(elemento.getIden() == batalla){
+								Par <String, Integer> informacion = elemento.getInfor();
+								Par <String, Integer> nuevaInfor = new Par<String, Integer>(informacion.getIden(),
+										parti);
+							}
+						}
+					}
+				}
+				else if(scan.nextLine().equals(ELIMINAR)){
+					
+				}
+				else if(scan.nextLine().equals(ELIMINAR)){
+					
+				}
+				else if(scan.nextLine().equals(BUSCAR)){
+					
+				}
+				else if(scan.nextLine().equals(LISTAR)){
+					
 				}
 			}
+			scan.close();
+			out.close();
 		}
-	}
-
-	
-	@Override
-	public boolean esta(Id identificador) {
-		int indiceOtro = 0;
-		boolean encontrado = false;
-		while (indiceOtro < total && !encontrado) {
-			if (Tabla[indiceOtro].equals(identificador)) {
-				encontrado = true;
-			} else {
-				indiceOtro++;
-			}
+		catch (FileNotFoundException e) {
+			System.err.println("Error: no existe fichero de entrada " + FICH_ENTRADA);
 		}
-		return encontrado;
-	}
+    }
 
-	
-	@Override
-	public In obtenerInformacion(Id identificador) throws noExisteIDException {
-		int indiceOtro = 0;
-		boolean encontrado = false;
-		while (indiceOtro < total && !encontrado) {
-			if (Tabla[indiceOtro].equals(identificador)) {
-				encontrado = true;
-			} else {
-				indiceOtro++;
-			}
-		}
-		if(encontrado){
-			return Tabla[indiceOtro].getInfor();
-		}
-		else{
-			throw new noExisteIDException();
-		}
-	}
-
-	
-	@Override
-	public void borrar(Id identificador) {
-		if (esta(identificador)) {
-			int indiceOtro = 0;
-			boolean encontrado = false;
-			while (!encontrado) {
-				if (Tabla[indiceOtro].equals(identificador)) {
-					Tabla[indiceOtro] = null;
-					encontrado = true;
-				} else {
-					indiceOtro++;
-				}
-			}
-		}
-	}
-
-	
-	@Override
-	public int tamaño() {
-		return total;
-	}
-
-	
-	@Override
-	public boolean esVacia() {
-		return total == 0;
-	}
-
-	
-	@Override
-	public String listar() {
-		String listado = "";
-		iniciarIterador();
-		while (existeSiguiente()) {
-			try {
-				listado += siguiente().toString() + "\n";
-			} catch (NoHaySiguienteException e) {
-				System.out.println(e);
-			}
-		}
-		return listado;
-	}
-
-	
-	public void iniciarIterador() {
-		iterador = 0;
-	}
-
-	
-	public boolean existeSiguiente() {
-		return indice < total;
-	}
-
-	
-	@Override
-	public Par<Id, In> siguiente() throws NoHaySiguienteException {
-		if (existeSiguiente()) {
-			Par <Id, In> siguiente = Tabla[indice];
-			iterador++;
-			return siguiente;
-		} else {
-			throw new NoHaySiguienteException();
-		}
+ 
+	public static void main(String[] args) {
+		LectorComandos lector = new LectorComandos();
+		lector.hacerOperaciones();
 	}
 }
