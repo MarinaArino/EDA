@@ -80,13 +80,41 @@ public class LectorComandos {
 					}
 				}
 				else if(scan.nextLine().equals(ELIMINAR)){
-					
+					String batalla = scan.nextLine();
+					if(Coleccion.esta(batalla)){
+						try{
+							//Recuperamos la informacion para escribirla en el fichero de salida
+							Par <String, Integer> informacion = Coleccion.obtenerInformacion(batalla);
+							out.format("ELIMINACION: %s;%s%n", batalla, informacion.toString());
+							Coleccion.borrar(batalla);
+						}
+						catch(noExisteIDException e){
+							//Ya sabemos que esta, asi que no hacemos nada.
+						}
+					}
+					else{
+						out.format("ELIMINACION DESECHADA: %s%n", batalla);
+					}
 				}
 				else if(scan.nextLine().equals(BUSCAR)){
-					
+					String batalla = scan.nextLine();
+					if(Coleccion.esta(batalla)){
+						try{
+							//Recuperamos la informacion para escribirla en el fichero de salida
+							Par <String, Integer> informacion = Coleccion.obtenerInformacion(batalla);
+							out.format("BUSQUEDA CON EXITO: %s;%s%n", batalla, informacion.toString());
+						}
+						catch(noExisteIDException e){
+							//Ya sabemos que esta, asi que no hacemos nada.
+						}
+					}
+					else{
+						out.format("BUSQUEDA SIN EXITO: %s%n", batalla);
+					}
 				}
 				else if(scan.nextLine().equals(LISTAR)){
-					
+					out.format("TOTAL: %d%n", Coleccion.tamaño());
+					out.format("%s", Coleccion.listar());
 				}
 			}
 			scan.close();
@@ -100,6 +128,12 @@ public class LectorComandos {
  
 	public static void main(String[] args) {
 		LectorComandos lector = new LectorComandos();
-		lector.hacerOperaciones();
+		try {
+			lector.hacerOperaciones();
+		} catch (NoHaySiguienteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }
