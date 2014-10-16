@@ -5,13 +5,11 @@ public class ColeccionEstatica<Id, In> implements Coleccion<Id, In> {
 
 	private Par<Id, In>[] Tabla;
 	private int total;
-	private int indice;
 	private static int iterador;
 	
 	@SuppressWarnings("unchecked")
 	public ColeccionEstatica() {
 		this.total = 0;
-		this.indice = 0;
 		this.Tabla = (Par[]) new Object[MAX];
 	}
 
@@ -19,9 +17,8 @@ public class ColeccionEstatica<Id, In> implements Coleccion<Id, In> {
 	public void meter(Id identificador, In informacion) {
 		if (!esta(identificador)) {
 			Par<Id, In> nuevo = new Par<Id, In>(identificador, informacion);
-			Tabla[indice] = nuevo;
+			Tabla[total] = nuevo;
 			total++;
-			indice++;
 		} else {
 			int indiceOtro = 0;
 			while (indiceOtro < total) {
@@ -120,14 +117,14 @@ public class ColeccionEstatica<Id, In> implements Coleccion<Id, In> {
 
 	
 	public boolean existeSiguiente() {
-		return indice < total;
+		return iterador < total;
 	}
 
 	
 	@Override
 	public Par<Id, In> siguiente() throws NoHaySiguienteException {
 		if (existeSiguiente()) {
-			Par <Id, In> siguiente = Tabla[indice];
+			Par <Id, In> siguiente = Tabla[iterador];
 			iterador++;
 			return siguiente;
 		} else {
